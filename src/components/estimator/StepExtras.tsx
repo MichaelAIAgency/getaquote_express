@@ -1,9 +1,11 @@
-import { Droplets, Wrench, LayoutTemplate } from 'lucide-react';
+import { Droplets, Wrench, LayoutTemplate, DoorClosed, PenTool } from 'lucide-react';
 
 interface Extras {
   primer: boolean;
   repairs: boolean;
   ceiling: boolean;
+  trim: boolean;
+  doors: boolean;
 }
 
 interface Props {
@@ -15,6 +17,8 @@ const options: { key: keyof Extras; label: string; desc: string; surcharge: stri
   { key: 'primer', label: 'Primer needed', desc: 'Improves adhesion and color accuracy.', surcharge: '+10%', Icon: Droplets },
   { key: 'repairs', label: 'Wall repairs', desc: 'Filling cracks, holes, and surface defects.', surcharge: '+20%', Icon: Wrench },
   { key: 'ceiling', label: 'Ceiling included', desc: 'Include ceiling surface in the quote.', surcharge: '+15%', Icon: LayoutTemplate },
+  { key: 'trim', label: 'Baseboards & Trim', desc: 'Detailed painting around edges and floors.', surcharge: '+10%', Icon: PenTool },
+  { key: 'doors', label: 'Doors & Window Frames', desc: 'Painting frames and individual doors.', surcharge: '+15%', Icon: DoorClosed },
 ];
 
 export function StepExtras({ value, onChange }: Props) {

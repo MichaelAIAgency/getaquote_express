@@ -9,24 +9,31 @@ interface Props {
   onContinue: () => void;
 }
 
-const conditionLabel: Record<string, string> = {
-  good: 'Good condition',
-  medium: 'Average condition',
-  bad: 'Poor condition',
-};
+  const formatString = (s: string) => s.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+  const conditionLabel: Record<string, string> = {
+    good: 'Good condition',
+    medium: 'Average condition',
+    bad: 'Poor condition',
+  };
 
 export function ResultScreen({ estimate, formData, onContinue }: Props) {
   const items = [
+    { label: 'Property type', value: formData.propertyType ? formatString(formData.propertyType) : '' },
     { label: 'Project type', value: formData.projectType === 'interior' ? 'Interior' : 'Exterior' },
     { label: 'Area size', value: `${formData.areaSize} m²` },
-    { label: 'Surface condition', value: conditionLabel[formData.surfaceCondition ?? ''] ?? '' },
-    { label: 'Number of coats', value: `${formData.numCoats} coat${formData.numCoats !== 1 ? 's' : ''}` },
+    { label: 'Surface cond.', value: conditionLabel[formData.surfaceCondition ?? ''] ?? '' },
+    { label: 'Paint quality', value: formData.paintQuality ? formatString(formData.paintQuality) : '' },
+    { label: 'Timeline', value: formData.urgency ? formatString(formData.urgency) : '' },
+    { label: 'Coats', value: `${formData.numCoats} coat${formData.numCoats !== 1 ? 's' : ''}` },
   ];
 
   const extras = [
     formData.extras.primer && 'Primer',
     formData.extras.repairs && 'Wall repairs',
     formData.extras.ceiling && 'Ceiling',
+    formData.extras.trim && 'Trim/Baseboards',
+    formData.extras.doors && 'Doors/Windows',
   ].filter(Boolean) as string[];
 
   return (

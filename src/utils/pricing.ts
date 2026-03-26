@@ -11,8 +11,16 @@ export function calculateEstimate(data: FormData): PriceEstimate {
 
   let multiplier = 1;
 
+  if (data.propertyType === 'commercial') multiplier += 0.15;
+
   if (data.surfaceCondition === 'medium') multiplier += 0.15;
   if (data.surfaceCondition === 'bad') multiplier += 0.30;
+
+  if (data.paintQuality === 'premium') multiplier += 0.25;
+  if (data.paintQuality === 'ultra_premium') multiplier += 0.50;
+
+  if (data.urgency === 'two_weeks') multiplier += 0.15;
+  if (data.urgency === 'asap') multiplier += 0.30;
 
   if (data.numCoats === 2) multiplier += 0.40;
   if (data.numCoats === 3) multiplier += 0.70;
@@ -20,6 +28,8 @@ export function calculateEstimate(data: FormData): PriceEstimate {
   if (data.extras.primer) multiplier += 0.10;
   if (data.extras.repairs) multiplier += 0.20;
   if (data.extras.ceiling) multiplier += 0.15;
+  if (data.extras.trim) multiplier += 0.10;
+  if (data.extras.doors) multiplier += 0.15;
 
   const base = area * baseRate * multiplier;
   const variance = 0.15;

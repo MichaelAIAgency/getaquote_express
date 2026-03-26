@@ -1,10 +1,10 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState } from 'react';
 import {
   Camera, Loader2, CheckCircle2, AlertCircle,
   Sparkles, ArrowRight, X, Home, Building2,
   Wrench, Droplets, LayoutTemplate, ImagePlus,
 } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+
 import type { AiAnalysis } from '../../types/estimator';
 
 interface Props {
@@ -56,87 +56,6 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
   const [analysis, setAnalysis] = useState<AiAnalysis | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const processFile = async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setErrorMsg('Please upload an image file (JPG, PNG, etc.)');
-      setState('error');
-      return;
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      setErrorMsg('File too large. Please upload an image under 10 MB.');
-      setState('error');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => setPreview(e.target?.result as string);
-    reader.readAsDataURL(file);
-
-    setState('uploading');
-    setErrorMsg('');
-
-    try {
-      const ext = file.name.split('.').pop() ?? 'jpg';
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('lead-photos')
-        .upload(fileName, file, { contentType: file.type });
-
-      if (uploadError) throw uploadError;
-
-      const { data: urlData } = supabase.storage
-        .from('lead-photos')
-        .getPublicUrl(uploadData.path);
-
-      const url = urlData.publicUrl;
-      setPhotoUrl(url);
-
-      setState('analyzing');
-
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-photo`;
-      const res = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          Apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({ imageUrl: url }),
-      });
-
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody.error ?? `HTTP ${res.status}`);
-      }
-
-      const result = (await res.json()) as AiAnalysis;
-      setAnalysis(result);
-      setState('done');
-    } catch (err) {
-      console.error(err);
-      setErrorMsg(
-        String(err).includes('OPENAI_API_KEY')
-          ? 'OpenAI API key not configured yet. You can still fill the form manually.'
-          : 'Analysis failed. You can still fill the form manually.'
-      );
-      setState('error');
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) processFile(file);
-  };
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) processFile(file);
-  }, []);
 
   const reset = () => {
     setState('idle');
@@ -144,7 +63,6 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
     setAnalysis(null);
     setPhotoUrl(null);
     setErrorMsg('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleApply = () => {
@@ -170,54 +88,53 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
       </div>
 
       {state === 'idle' && (
-        <div
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className="relative rounded-2xl p-8 text-center cursor-pointer transition-all duration-200"
-          style={
-            isDragging
-              ? {
-                  background: 'rgba(245, 158, 11, 0.12)',
-                  border: '2px dashed rgba(245, 158, 11, 0.60)',
-                }
-              : {
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '2px dashed rgba(255, 255, 255, 0.15)',
-                }
-          }
-        >
-          <div className="flex flex-col items-center gap-3">
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(245, 158, 11, 0.15)' }}
-            >
-              <Camera className="w-7 h-7 text-amber-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-white/85">Drop a photo here</p>
-              <p className="text-sm text-white/40 mt-0.5">or tap to browse · JPG, PNG up to 10 MB</p>
-            </div>
-            <div className="flex flex-wrap gap-2 justify-center mt-1">
-              {['Project type', 'Surface condition', 'Repair needs', 'Primer needs'].map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs px-2.5 py-1 rounded-full"
-                  style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.45)' }}
-                >
-                  {tag}
-                </span>
-              ))}
+        <div className="relative">
+          <div
+            className="relative rounded-2xl p-8 text-center transition-all duration-200 opacity-40 grayscale"
+            style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '2px dashed rgba(255, 255, 255, 0.15)',
+            }}
+          >
+            <div className="flex flex-col items-center gap-3">
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                style={{ background: 'rgba(245, 158, 11, 0.15)' }}
+              >
+                <Camera className="w-7 h-7 text-amber-400" />
+              </div>
+              <div>
+                <p className="font-semibold text-white/85">Drop a photo here</p>
+                <p className="text-sm text-white/40 mt-0.5">or tap to browse · JPG, PNG up to 10 MB</p>
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center mt-1">
+                {['Project type', 'Surface condition', 'Repair needs', 'Primer needs'].map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs px-2.5 py-1 rounded-full"
+                    style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.45)' }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
+          
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div 
+              className="px-4 py-2 rounded-xl backdrop-blur-md font-bold text-sm tracking-wide shadow-2xl flex items-center gap-2"
+              style={{
+                background: 'rgba(245, 158, 11, 0.9)',
+                color: '#fff',
+                border: '1px solid rgba(255,255,255,0.2)',
+                transform: 'rotate(-2deg)'
+              }}
+            >
+              <Wrench className="w-4 h-4" />
+              UNDER CONSTRUCTION
+            </div>
+          </div>
         </div>
       )}
 
@@ -323,9 +240,15 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
         )}
         <button
           onClick={onSkip}
-          className="w-full py-2.5 text-white/40 hover:text-white/70 text-sm font-medium transition-colors"
+          className="relative w-full py-3.5 text-white font-semibold rounded-2xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 overflow-hidden mt-2"
+          style={{
+            background: 'var(--brand-primary)',
+            boxShadow: '0 4px 20px rgba(245, 158, 11, 0.35)',
+          }}
         >
-          {state === 'done' ? 'Ignore and fill manually' : 'Skip, fill in manually'}
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+          Fill form manually
+          <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     </div>

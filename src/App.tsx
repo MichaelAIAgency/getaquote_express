@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { PaintBucket, ChevronLeft, Sparkles } from 'lucide-react';
 import { ProgressBar } from './components/ui/ProgressBar';
 import { StepPhotoUpload } from './components/estimator/StepPhotoUpload';
+import { StepPropertyType } from './components/estimator/StepPropertyType';
 import { StepProjectType } from './components/estimator/StepProjectType';
 import { StepAreaSize } from './components/estimator/StepAreaSize';
 import { StepSurfaceCondition } from './components/estimator/StepSurfaceCondition';
+import { StepPaintQuality } from './components/estimator/StepPaintQuality';
+import { StepUrgency } from './components/estimator/StepUrgency';
 import { StepCoats } from './components/estimator/StepCoats';
 import { StepExtras } from './components/estimator/StepExtras';
+import { LoadingScreen } from './components/estimator/LoadingScreen';
 import { ResultScreen } from './components/estimator/ResultScreen';
 import { LeadCapture } from './components/estimator/LeadCapture';
 import { ThankYou } from './components/estimator/ThankYou';
@@ -14,16 +18,19 @@ import { brand } from './config/brand';
 import { calculateEstimate } from './utils/pricing';
 import type { FormData, PriceEstimate, AiAnalysis } from './types/estimator';
 
-type AppView = 'landing' | 'photo' | 'form' | 'result' | 'lead' | 'thanks';
+type AppView = 'landing' | 'photo' | 'form' | 'loading' | 'result' | 'lead' | 'thanks';
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 8;
 
 const initialFormData: FormData = {
+  propertyType: null,
   projectType: null,
   areaSize: '',
   surfaceCondition: null,
+  paintQuality: null,
+  urgency: null,
   numCoats: null,
-  extras: { primer: false, repairs: false, ceiling: false },
+  extras: { primer: false, repairs: false, ceiling: false, trim: false, doors: false },
 };
 
 function AmbientOrbs() {
@@ -49,16 +56,34 @@ function BrandLogo() {
   if (brand.logoUrl) {
     return <img src={brand.logoUrl} alt={brand.name} className="h-8 w-auto" />;
   }
+  
+  const [mainName, subtitle] = brand.name.toLowerCase().includes(" prototype") 
+    ? [brand.name.replace(/ prototype/i, "").trim(), "PROTOTYPE"] 
+    : [brand.name, ""];
+
   return (
-    <>
+    <div className="flex items-center gap-3 select-none">
       <div
-        className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg"
-        style={{ backgroundColor: 'var(--brand-primary)' }}
+        className="relative w-10 h-10 rounded-[14px] flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0"
+        style={{ 
+          background: 'linear-gradient(135deg, var(--brand-primary), #c2410c)',
+          boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)'
+        }}
       >
-        <PaintBucket className="w-5 h-5 text-white" />
+        <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-white/30 to-transparent" />
+        <Sparkles className="w-5 h-5 text-white drop-shadow-md relative z-10" />
       </div>
-      <span className="font-bold text-lg text-white">{brand.name}</span>
-    </>
+      <div className="flex flex-col justify-center">
+        <span className="font-extrabold text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-50 via-gray-200 to-gray-400">
+          {mainName}
+        </span>
+        {subtitle && (
+          <span className="text-[10px] font-bold tracking-[0.2em] text-amber-400 uppercase leading-none opacity-90 -mt-[1px]">
+            {subtitle}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -133,6 +158,23 @@ function LandingHero({ onStart }: { onStart: () => void }) {
           </div>
         </div>
       </main>
+
+      <footer className="relative z-10 w-full text-center pb-8 mt-auto">
+        <a
+          href="https://michaelaiagency.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-full transition-all hover:scale-105 hover:bg-white/5"
+          style={{
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            color: '#a1a1aa', // gray-400
+          }}
+        >
+          <Sparkles className="w-3.5 h-3.5" style={{ color: '#a1a1aa' }} />
+          Prototype created by Michael AI
+        </a>
+      </footer>
     </div>
   );
 }
@@ -158,6 +200,7 @@ export default function App() {
       surfaceCondition: analysis.surfaceCondition,
       areaSize: analysis.estimatedAreaM2 ? String(analysis.estimatedAreaM2) : f.areaSize,
       extras: {
+        ...f.extras,
         primer: analysis.needsPrimer,
         repairs: analysis.needsRepairs,
         ceiling: analysis.hasCeiling,
@@ -171,18 +214,21 @@ export default function App() {
   const handlePhotoSkip = () => { advance(); setView('form'); setStep(1); };
 
   const canAdvance = (): boolean => {
-    if (step === 1) return formData.projectType !== null;
-    if (step === 2) {
+    if (step === 1) return formData.propertyType !== null;
+    if (step === 2) return formData.projectType !== null;
+    if (step === 3) {
       const n = parseFloat(formData.areaSize);
       return !isNaN(n) && n > 0;
     }
-    if (step === 3) return formData.surfaceCondition !== null;
-    if (step === 4) return formData.numCoats !== null;
+    if (step === 4) return formData.surfaceCondition !== null;
+    if (step === 5) return formData.paintQuality !== null;
+    if (step === 6) return formData.urgency !== null;
+    if (step === 7) return formData.numCoats !== null;
     return true;
   };
 
   const handleNext = () => {
-    if (step === 2) {
+    if (step === 3) {
       const n = parseFloat(formData.areaSize);
       if (isNaN(n) || n <= 0) {
         setAreaError('Please enter a valid area greater than 0');
@@ -200,12 +246,13 @@ export default function App() {
       const est = calculateEstimate(formData);
       setEstimate(est);
       advance();
-      setView('result');
+      setView('loading');
     }
   };
 
   const handleBack = () => {
     if (view === 'result')             { setView('form');    advance(); setStep(TOTAL_STEPS); return; }
+    if (view === 'loading')            { setView('form');    advance(); setStep(TOTAL_STEPS); return; }
     if (view === 'lead')               { setView('result');  advance(); return; }
     if (view === 'form' && step > 1)   { advance(); setStep((s) => s - 1); return; }
     if (view === 'form' && step === 1) { setView('photo');   advance(); return; }
@@ -230,7 +277,7 @@ export default function App() {
         <div className="flex items-center gap-2">
           <BrandLogo />
         </div>
-        {(view === 'photo' || view === 'form' || view === 'result' || view === 'lead') && (
+        {(view === 'photo' || view === 'form' || view === 'result' || view === 'loading' || view === 'lead') && (
           <button
             onClick={handleBack}
             className="flex items-center gap-1 text-sm text-white/50 hover:text-white/90 transition-colors"
@@ -279,12 +326,18 @@ export default function App() {
                 />
               )}
               {view === 'form' && step === 1 && (
+                <StepPropertyType
+                  value={formData.propertyType}
+                  onChange={(v) => setFormData((f) => ({ ...f, propertyType: v }))}
+                />
+              )}
+              {view === 'form' && step === 2 && (
                 <StepProjectType
                   value={formData.projectType}
                   onChange={(v) => setFormData((f) => ({ ...f, projectType: v }))}
                 />
               )}
-              {view === 'form' && step === 2 && (
+              {view === 'form' && step === 3 && (
                 <StepAreaSize
                   value={formData.areaSize}
                   onChange={(v) => {
@@ -294,23 +347,38 @@ export default function App() {
                   error={areaError}
                 />
               )}
-              {view === 'form' && step === 3 && (
+              {view === 'form' && step === 4 && (
                 <StepSurfaceCondition
                   value={formData.surfaceCondition}
                   onChange={(v) => setFormData((f) => ({ ...f, surfaceCondition: v }))}
                 />
               )}
-              {view === 'form' && step === 4 && (
+              {view === 'form' && step === 5 && (
+                <StepPaintQuality
+                  value={formData.paintQuality}
+                  onChange={(v) => setFormData((f) => ({ ...f, paintQuality: v }))}
+                />
+              )}
+              {view === 'form' && step === 6 && (
+                <StepUrgency
+                  value={formData.urgency}
+                  onChange={(v) => setFormData((f) => ({ ...f, urgency: v }))}
+                />
+              )}
+              {view === 'form' && step === 7 && (
                 <StepCoats
                   value={formData.numCoats}
                   onChange={(v) => setFormData((f) => ({ ...f, numCoats: v }))}
                 />
               )}
-              {view === 'form' && step === 5 && (
+              {view === 'form' && step === 8 && (
                 <StepExtras
                   value={formData.extras}
                   onChange={(v) => setFormData((f) => ({ ...f, extras: v }))}
                 />
+              )}
+              {view === 'loading' && (
+                <LoadingScreen onComplete={() => { advance(); setView('result'); }} />
               )}
               {view === 'result' && (
                 <ResultScreen
@@ -354,6 +422,23 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      <footer className="relative z-10 w-full text-center pb-8 mt-auto">
+        <a
+          href="https://michaelaiagency.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-full transition-all hover:scale-[1.02] hover:bg-white/5"
+          style={{
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            color: '#a1a1aa',
+          }}
+        >
+          <Sparkles className="w-3.5 h-3.5" style={{ color: '#a1a1aa' }} />
+          Prototype created by Michael AI
+        </a>
+      </footer>
     </div>
   );
 }

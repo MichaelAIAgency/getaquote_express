@@ -1,16 +1,24 @@
+export type PropertyType = 'residential' | 'commercial';
 export type ProjectType = 'interior' | 'exterior';
 export type SurfaceCondition = 'good' | 'medium' | 'bad';
+export type PaintQuality = 'standard' | 'premium' | 'ultra_premium';
+export type Urgency = 'flexible' | 'two_weeks' | 'asap';
 export type NumCoats = 1 | 2 | 3;
 
 export interface FormData {
+  propertyType: PropertyType | null;
   projectType: ProjectType | null;
   areaSize: string;
   surfaceCondition: SurfaceCondition | null;
+  paintQuality: PaintQuality | null;
+  urgency: Urgency | null;
   numCoats: NumCoats | null;
   extras: {
     primer: boolean;
     repairs: boolean;
     ceiling: boolean;
+    trim: boolean;
+    doors: boolean;
   };
 }
 
