@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Brand CSS Variables ─────────────────────────────────────────────────── */
+:root {
+  --brand-primary:       #F59E0B;
+  --brand-hover:         #D97706;
+  --brand-light:         #FFFBEB;
+  --brand-text:          #92400E;
+  --brand-ring:          #FDE68A;
+  --brand-gradient-from: #F59E0B;
+  --brand-gradient-to:   #EA580C;
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.35s ease-out both;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out both;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Ambient orb float ───────────────────────────────────────────────────── */
+@keyframes orbFloat {
+  0%,  100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -28px) scale(1.06); }
+  66%       { transform: translate(-24px, 20px) scale(0.96); }
+}
+
+.orb-1 { animation: orbFloat 20s ease-in-out infinite; }
+.orb-2 { animation: orbFloat 26s ease-in-out infinite reverse; animation-delay: -7s; }
+.orb-3 { animation: orbFloat 32s ease-in-out infinite; animation-delay: -14s; }
+
+/* ── Glass input ─────────────────────────────────────────────────────────── */
+.glass-input {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  color: white;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.30);
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(245, 158, 11, 0.70);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.14);
+  outline: none;
+}
+
+.glass-input-error {
+  background: rgba(239, 68, 68, 0.09) !important;
+  border-color: rgba(239, 68, 68, 0.60) !important;
+}
+
+.glass-input-error:focus {
+  border-color: rgba(239, 68, 68, 0.80) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+
+/* ── Misc resets ─────────────────────────────────────────────────────────── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
