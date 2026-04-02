@@ -1,74 +1,70 @@
-/*
- * ─────────────────────────────────────────────────────────────────────────────
- *  WHITE-LABEL CONFIG
- *  Edit this file to fully rebrand the estimator for any painting company.
- *  All colors, copy, contact details, pricing rates, and UI text live here.
- * ─────────────────────────────────────────────────────────────────────────────
- */
-
 export const brand = {
-  // ── Company Identity ───────────────────────────────────────────────────────
-  name: 'Instant Get A Quote Prototype',
-  tagline: 'Professional Painting Services',
-  phone: '+353 1 234 5678',
-  email: 'hello@propaint.ie',
-  website: 'https://propaint.ie',
+  name: 'Nashville House Painters',
+  tagline: "We Paint Your Home Like It's Our Own.",
+  phone: '(615) 420-2585',
+  email: 'info@ipaintnashville.com',
+  website: 'https://ipaintnashville.com',
+  location: 'Nashville, TN',
 
-  // Set to a URL string to show a logo image instead of the icon+text wordmark.
-  // e.g. logoUrl: 'https://example.com/logo.png'
-  logoUrl: null as string | null,
+  logoUrl: '/logo.webp' as string | null,
 
-  // ── Localisation ───────────────────────────────────────────────────────────
-  locale: 'en-IE',    // BCP 47 locale used for number/currency formatting
-  currency: 'EUR',    // ISO 4217 currency code
+  locale: 'en-US',
+  currency: 'USD',
 
-  // ── Social Proof Stats (shown on hero landing page) ────────────────────────
   stats: [
     { value: '500+', label: 'Projects Completed' },
     { value: '4.9★', label: 'Average Rating' },
-    { value: '24h', label: 'Quote Turnaround' },
+    { value: '15 Years', label: 'Serving Nashville' },
   ],
 
-  // ── All UI Copy ────────────────────────────────────────────────────────────
   copy: {
-    heroTitle: 'How much will your painting project cost?',
+    heroTitle: 'How much will your Nashville painting project cost?',
     heroSubtitle:
-      'Answer 5 quick questions and get an instant price estimate — no sign-up required.',
-    heroBadge: 'Free Instant Estimate',
+      'Answer 8 quick questions and get an instant price estimate — no sign-up required.',
+    heroBadge: 'FREE INSTANT ESTIMATE',
     heroCtaButton: 'Get My Free Estimate',
     heroCtaSubtext: 'Takes less than 2 minutes. No obligation.',
-    resultCta: 'Get Exact Quote in 24 Hours',
-    privacyNote: 'No obligation. We respect your privacy.',
+    resultTitle: 'Your Nashville House Painters Estimate',
+    resultSubtext: "Based on your project details, here's your estimated investment:",
+    resultDisclaimer:
+      'This is a preliminary estimate. Contact us for a detailed, no-obligation quote.',
+    resultCta: 'Get My Exact Quote',
+    resultPhoneCta: 'Call us now: (615) 420-2585',
+    leadTitle: "Almost there! Let's send you your personalized quote.",
+    leadSubtext: "Enter your details below and we'll follow up with a detailed breakdown.",
+    leadSubmitButton: 'Send My Quote Request',
+    leadPhoneHours: 'Prefer to call? (615) 420-2585 | Mon–Fri 7:30 AM – 5:30 PM',
+    privacyNote: 'Your info is safe with us. No spam, ever.',
     thankYouTitle: 'Request Submitted!',
     thankYouSubtitle:
-      'Thank you! A specialist will review your details and contact you within 24 hours.',
+      'Thank you! A Nashville House Painters specialist will review your details and reach out shortly.',
     responseTime: '24 hours',
     responseTimeNote:
       'Our team will reach out via email or phone to confirm your quote.',
     phoneCta: 'Need help sooner?',
+    loadingTitle: 'Calculating your Nashville estimate...',
+    loadingSubtext: 'Crunching local pricing data for Middle Tennessee...',
+    photoUploadTitle: 'Analyze your space',
+    photoUploadSubtext: 'Upload a photo of your space for AI-powered analysis.',
+    footerTagline:
+      'Serving Nashville, Brentwood, Franklin, Mt. Juliet & Middle Tennessee',
+    footerCopyright: '© 2026 Nashville House Painters. All Rights Reserved.',
   },
 
-  // ── Pricing Rates (per m²) ─────────────────────────────────────────────────
   pricing: {
-    interiorRatePerSqm: 8,
-    exteriorRatePerSqm: 12,
+    interiorBaseRatePerSqft: 2.0,
+    exteriorMultiplier: 1.2,
+    deckFenceRatePerSqft: 1.5,
+    bothMultiplier: 1.1,
   },
 
-  // ── Brand Colors ───────────────────────────────────────────────────────────
-  // These are injected as CSS variables so every UI element updates automatically.
-  // primary        → main buttons, selected states, progress bar
-  // primaryHover   → button hover state
-  // primaryLight   → tinted backgrounds on selected options
-  // primaryText    → text on primaryLight backgrounds
-  // primaryRing    → focus rings / active step glow
-  // gradientFrom / gradientTo → result card gradient
   colors: {
-    primary: '#F59E0B',
-    primaryHover: '#D97706',
-    primaryLight: '#FFFBEB',
-    primaryText: '#92400E',
-    primaryRing: '#FDE68A',
-    gradientFrom: '#F59E0B',
-    gradientTo: '#EA580C',
+    primary: '#CC0000',
+    primaryHover: '#AA0000',
+    primaryLight: '#FFF0F0',
+    primaryText: '#7A0000',
+    primaryRing: '#FF9999',
+    gradientFrom: '#CC0000',
+    gradientTo: '#990000',
   },
 };

@@ -28,13 +28,13 @@ export function ThankYou({ conditionReport }: Props) {
         <div
           className="rounded-2xl p-4 text-left mb-5"
           style={{
-            background: 'rgba(245, 158, 11, 0.10)',
-            border: '1px solid rgba(245, 158, 11, 0.28)',
+            background: 'rgba(204, 0, 0, 0.10)',
+            border: '1px solid rgba(204, 0, 0, 0.28)',
           }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <FileText className="w-4 h-4 text-amber-400 flex-shrink-0" />
-            <p className="text-xs font-semibold text-amber-300 uppercase tracking-wide">AI Condition Report</p>
+            <FileText className="w-4 h-4 flex-shrink-0" style={{ color: '#CC0000' }} />
+            <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#FF8888' }}>AI Condition Report</p>
           </div>
           <p className="text-sm text-white/70 leading-relaxed">{conditionReport}</p>
           <p className="text-xs text-white/30 mt-2">Sent to the contractor with your lead details.</p>
@@ -51,9 +51,9 @@ export function ThankYou({ conditionReport }: Props) {
         <div className="flex items-start gap-3">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-            style={{ background: 'rgba(245, 158, 11, 0.15)' }}
+            style={{ background: 'rgba(204, 0, 0, 0.15)' }}
           >
-            <Clock className="w-4 h-4 text-amber-400" />
+            <Clock className="w-4 h-4" style={{ color: '#CC0000' }} />
           </div>
           <div>
             <p className="font-semibold text-white/85 text-sm">
@@ -65,15 +65,21 @@ export function ThankYou({ conditionReport }: Props) {
         <div className="flex items-start gap-3">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-            style={{ background: 'rgba(245, 158, 11, 0.15)' }}
+            style={{ background: 'rgba(204, 0, 0, 0.15)' }}
           >
-            <Phone className="w-4 h-4 text-amber-400" />
+            <Phone className="w-4 h-4" style={{ color: '#CC0000' }} />
           </div>
           <div>
             <p className="font-semibold text-white/85 text-sm">{brand.copy.phoneCta}</p>
             <p className="text-xs text-white/40 mt-0.5">
               Call us directly at{' '}
-              <a href={`tel:${brand.phone}`} className="text-amber-400 font-medium hover:text-amber-300 transition-colors">
+              <a
+                href={`tel:${brand.phone}`}
+                className="font-medium transition-colors"
+                style={{ color: '#CC0000' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#AA0000')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#CC0000')}
+              >
                 {brand.phone}
               </a>
             </p>

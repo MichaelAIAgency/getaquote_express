@@ -1,4 +1,4 @@
-import { CheckCircle2, AlertCircle, XCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle, ShieldAlert, XCircle } from 'lucide-react';
 import type { SurfaceCondition } from '../../types/estimator';
 
 interface Props {
@@ -17,10 +17,10 @@ const options: {
   activeSurchargeColor: string;
 }[] = [
   {
-    value: 'good',
-    label: 'Good',
-    desc: 'Clean, smooth surface. No repairs needed.',
-    surcharge: 'No extra cost',
+    value: 'excellent',
+    label: 'Excellent',
+    desc: 'Like-new surfaces, minor touch-ups only.',
+    surcharge: 'Base price',
     Icon: CheckCircle2,
     iconColor: 'text-emerald-400',
     activeStyle: {
@@ -31,24 +31,38 @@ const options: {
     activeSurchargeColor: 'text-emerald-400',
   },
   {
-    value: 'medium',
-    label: 'Average',
-    desc: 'Minor cracks or imperfections, light prep work.',
-    surcharge: '+15%',
+    value: 'good',
+    label: 'Good',
+    desc: 'Clean surfaces, standard prep needed.',
+    surcharge: '+10%',
     Icon: AlertCircle,
-    iconColor: 'text-amber-400',
+    iconColor: 'text-blue-400',
     activeStyle: {
-      background: 'rgba(245, 158, 11, 0.14)',
-      border: '1.5px solid rgba(245, 158, 11, 0.50)',
-      boxShadow: '0 0 20px rgba(245, 158, 11, 0.12)',
+      background: 'rgba(59, 130, 246, 0.14)',
+      border: '1.5px solid rgba(59, 130, 246, 0.50)',
+      boxShadow: '0 0 20px rgba(59, 130, 246, 0.12)',
     },
-    activeSurchargeColor: 'text-amber-400',
+    activeSurchargeColor: 'text-blue-400',
   },
   {
-    value: 'bad',
+    value: 'fair',
+    label: 'Fair',
+    desc: 'Some cracks or imperfections, repairs needed.',
+    surcharge: '+20%',
+    Icon: ShieldAlert,
+    iconColor: 'text-yellow-400',
+    activeStyle: {
+      background: 'rgba(234, 179, 8, 0.14)',
+      border: '1.5px solid rgba(234, 179, 8, 0.50)',
+      boxShadow: '0 0 20px rgba(234, 179, 8, 0.12)',
+    },
+    activeSurchargeColor: 'text-yellow-400',
+  },
+  {
+    value: 'poor',
     label: 'Poor',
-    desc: 'Major damage, significant repair work required.',
-    surcharge: '+30%',
+    desc: 'Significant damage, major prep/repairs required.',
+    surcharge: '+35%',
     Icon: XCircle,
     iconColor: 'text-red-400',
     activeStyle: {
@@ -63,7 +77,7 @@ const options: {
 export function StepSurfaceCondition({ value, onChange }: Props) {
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-1">Surface condition?</h2>
+      <h2 className="text-2xl font-bold text-white mb-1">What's the current condition of the surfaces?</h2>
       <p className="text-white/50 text-sm mb-6">This helps us account for any prep work required.</p>
       <div className="flex flex-col gap-3">
         {options.map(({ value: v, label, desc, surcharge, Icon, iconColor, activeStyle, activeSurchargeColor }) => (

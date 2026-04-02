@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PaintBucket, ChevronLeft, Sparkles } from 'lucide-react';
+import { PaintBucket, ChevronLeft, Sparkles, Phone, Mail, Facebook, Instagram } from 'lucide-react';
 import { ProgressBar } from './components/ui/ProgressBar';
 import { StepPhotoUpload } from './components/estimator/StepPhotoUpload';
 import { StepPropertyType } from './components/estimator/StepPropertyType';
@@ -30,7 +30,7 @@ const initialFormData: FormData = {
   paintQuality: null,
   urgency: null,
   numCoats: null,
-  extras: { primer: false, repairs: false, ceiling: false, trim: false, doors: false },
+  extras: { primer: false, repairs: false, ceiling: false, trim: false, doors: false, pressure_washing: false, color_consultation: false },
 };
 
 function AmbientOrbs() {
@@ -38,15 +38,15 @@ function AmbientOrbs() {
     <div className="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       <div
         className="orb-1 absolute -top-56 -left-56 w-[750px] h-[750px] rounded-full"
-        style={{ background: 'radial-gradient(circle at center, rgba(245,158,11,0.28) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(circle at center, rgba(204,0,0,0.20) 0%, transparent 65%)' }}
       />
       <div
         className="orb-2 absolute -bottom-40 -right-40 w-[650px] h-[650px] rounded-full"
-        style={{ background: 'radial-gradient(circle at center, rgba(234,88,12,0.22) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(circle at center, rgba(153,0,0,0.16) 0%, transparent 65%)' }}
       />
       <div
         className="orb-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] rounded-full"
-        style={{ background: 'radial-gradient(ellipse at center, rgba(245,158,11,0.07) 0%, transparent 60%)' }}
+        style={{ background: 'radial-gradient(ellipse at center, rgba(204,0,0,0.06) 0%, transparent 60%)' }}
       />
     </div>
   );
@@ -54,35 +54,36 @@ function AmbientOrbs() {
 
 function BrandLogo() {
   if (brand.logoUrl) {
-    return <img src={brand.logoUrl} alt={brand.name} className="h-8 w-auto" />;
+    return (
+      <div className="flex items-center gap-3 select-none">
+        <img src={brand.logoUrl} alt={brand.name} className="h-10 w-auto flex-shrink-0" />
+        <div className="flex flex-col justify-center">
+          <span className="font-extrabold text-lg tracking-tight text-white leading-tight">
+            Nashville House Painters
+          </span>
+          <span className="text-[10px] font-medium tracking-wide text-white/40 leading-none">
+            ipaintnashville.com
+          </span>
+        </div>
+      </div>
+    );
   }
-  
-  const [mainName, subtitle] = brand.name.toLowerCase().includes(" prototype") 
-    ? [brand.name.replace(/ prototype/i, "").trim(), "PROTOTYPE"] 
-    : [brand.name, ""];
 
   return (
     <div className="flex items-center gap-3 select-none">
       <div
         className="relative w-10 h-10 rounded-[14px] flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0"
-        style={{ 
-          background: 'linear-gradient(135deg, var(--brand-primary), #c2410c)',
-          boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)'
+        style={{
+          background: 'linear-gradient(135deg, var(--brand-primary), #990000)',
+          boxShadow: '0 8px 24px rgba(204, 0, 0, 0.4)',
         }}
       >
         <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-white/30 to-transparent" />
-        <Sparkles className="w-5 h-5 text-white drop-shadow-md relative z-10" />
+        <PaintBucket className="w-5 h-5 text-white drop-shadow-md relative z-10" />
       </div>
-      <div className="flex flex-col justify-center">
-        <span className="font-extrabold text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-50 via-gray-200 to-gray-400">
-          {mainName}
-        </span>
-        {subtitle && (
-          <span className="text-[10px] font-bold tracking-[0.2em] text-amber-400 uppercase leading-none opacity-90 -mt-[1px]">
-            {subtitle}
-          </span>
-        )}
-      </div>
+      <span className="font-extrabold text-xl tracking-tight text-white">
+        {brand.name}
+      </span>
     </div>
   );
 }
@@ -101,8 +102,8 @@ function LandingHero({ onStart }: { onStart: () => void }) {
           <div
             className="inline-flex items-center gap-2 border text-xs font-semibold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider backdrop-blur-sm"
             style={{
-              backgroundColor: 'rgba(245, 158, 11, 0.12)',
-              borderColor: 'rgba(245, 158, 11, 0.35)',
+              backgroundColor: 'rgba(204, 0, 0, 0.12)',
+              borderColor: 'rgba(204, 0, 0, 0.40)',
               color: 'var(--brand-primary)',
             }}
           >
@@ -111,15 +112,9 @@ function LandingHero({ onStart }: { onStart: () => void }) {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-5 leading-tight">
-            {brand.copy.heroTitle.split('painting project').length > 1 ? (
-              <>
-                {brand.copy.heroTitle.split('painting project')[0]}
-                <span style={{ color: 'var(--brand-primary)' }}>painting project</span>
-                {brand.copy.heroTitle.split('painting project')[1]}
-              </>
-            ) : (
-              brand.copy.heroTitle
-            )}
+            How much will your{' '}
+            <span style={{ color: 'var(--brand-primary)' }}>Nashville painting</span>
+            {' '}project cost?
           </h1>
 
           <p className="text-white/55 text-lg mb-10 max-w-md mx-auto leading-relaxed">
@@ -131,7 +126,7 @@ function LandingHero({ onStart }: { onStart: () => void }) {
             className="relative inline-flex items-center gap-2.5 px-8 py-4 text-white font-bold rounded-2xl text-lg transition-all duration-200 active:scale-[0.97] hover:scale-[1.02] overflow-hidden"
             style={{
               backgroundColor: 'var(--brand-primary)',
-              boxShadow: '0 8px 32px rgba(245, 158, 11, 0.40)',
+              boxShadow: '0 8px 32px rgba(204, 0, 0, 0.40)',
             }}
           >
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
@@ -159,21 +154,39 @@ function LandingHero({ onStart }: { onStart: () => void }) {
         </div>
       </main>
 
-      <footer className="relative z-10 w-full text-center pb-8 mt-auto">
-        <a
-          href="https://michaelaiagency.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-full transition-all hover:scale-105 hover:bg-white/5"
-          style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#a1a1aa', // gray-400
-          }}
-        >
-          <Sparkles className="w-3.5 h-3.5" style={{ color: '#a1a1aa' }} />
-          Prototype created by Michael AI
-        </a>
+      <footer className="relative z-10 w-full pb-8 mt-auto">
+        <div className="max-w-xl mx-auto px-6">
+          <div
+            className="rounded-2xl px-6 py-5 text-center"
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+          >
+            <p className="text-xs text-white/25 mb-1">{brand.copy.footerCopyright}</p>
+            <p className="text-xs text-white/35 mb-3">{brand.copy.footerTagline}</p>
+            <div className="flex items-center justify-center flex-wrap gap-3 text-xs text-white/35">
+              <a href={`tel:${brand.phone}`} className="flex items-center gap-1 hover:text-white/60 transition-colors">
+                <Phone className="w-3 h-3" />
+                {brand.phone}
+              </a>
+              <span className="text-white/15">·</span>
+              <a href={`mailto:${brand.email}`} className="flex items-center gap-1 hover:text-white/60 transition-colors">
+                <Mail className="w-3 h-3" />
+                {brand.email}
+              </a>
+              <span className="text-white/15">·</span>
+              <div className="flex items-center gap-2">
+                <a href="https://facebook.com/ipaintnashville" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">
+                  <Facebook className="w-3.5 h-3.5" />
+                </a>
+                <a href="https://instagram.com/ipaintnashville" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">
+                  <Instagram className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
@@ -198,7 +211,7 @@ export default function App() {
       ...f,
       projectType: analysis.projectType,
       surfaceCondition: analysis.surfaceCondition,
-      areaSize: analysis.estimatedAreaM2 ? String(analysis.estimatedAreaM2) : f.areaSize,
+      areaSize: analysis.estimatedAreaSqft ? String(analysis.estimatedAreaSqft) : f.areaSize,
       extras: {
         ...f.extras,
         primer: analysis.needsPrimer,
@@ -308,9 +321,9 @@ export default function App() {
               <div
                 className="flex items-center gap-2 rounded-xl px-3 py-2.5 mb-5 text-xs font-medium"
                 style={{
-                  background: 'rgba(245, 158, 11, 0.14)',
-                  border: '1px solid rgba(245, 158, 11, 0.35)',
-                  color: '#FCD34D',
+                  background: 'rgba(204, 0, 0, 0.12)',
+                  border: '1px solid rgba(204, 0, 0, 0.35)',
+                  color: '#FF8888',
                 }}
               >
                 <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
@@ -409,7 +422,7 @@ export default function App() {
                   className="relative w-full py-3.5 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-2xl transition-all duration-200 active:scale-[0.98] overflow-hidden"
                   style={{
                     background: canAdvance() ? 'var(--brand-primary)' : 'rgba(255,255,255,0.10)',
-                    boxShadow: canAdvance() ? '0 4px 20px rgba(245,158,11,0.35)' : 'none',
+                    boxShadow: canAdvance() ? '0 4px 20px rgba(204,0,0,0.35)' : 'none',
                   }}
                 >
                   {canAdvance() && (
@@ -423,21 +436,11 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="relative z-10 w-full text-center pb-8 mt-auto">
-        <a
-          href="https://michaelaiagency.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-full transition-all hover:scale-[1.02] hover:bg-white/5"
-          style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#a1a1aa',
-          }}
-        >
-          <Sparkles className="w-3.5 h-3.5" style={{ color: '#a1a1aa' }} />
-          Prototype created by Michael AI
-        </a>
+      <footer className="relative z-10 w-full pb-6 mt-auto">
+        <div className="max-w-md mx-auto px-4 text-center text-xs text-white/20 space-y-1">
+          <p>{brand.copy.footerCopyright}</p>
+          <p>{brand.copy.footerTagline}</p>
+        </div>
       </footer>
     </div>
   );

@@ -9,13 +9,13 @@ interface Props {
 export function StepPaintQuality({ value, onChange }: Props) {
   const options: { value: PaintQuality; label: string; desc: string; Icon: React.ElementType; color: string }[] = [
     { value: 'standard', label: 'Standard', desc: 'Durable, quality finish for everyday wear', Icon: ShieldCheck, color: 'text-blue-400' },
-    { value: 'premium', label: 'Premium', desc: 'Enhanced washability and great coverage', Icon: Star, color: 'text-amber-400' },
-    { value: 'ultra_premium', label: 'Ultra Premium', desc: 'The finest finish, rich color, best longevity', Icon: Sparkles, color: 'text-purple-400' },
+    { value: 'premium', label: 'Premium', desc: 'Enhanced washability and great coverage', Icon: Star, color: 'text-yellow-400' },
+    { value: 'ultra_premium', label: 'Ultra Premium', desc: 'The finest finish, rich color, best longevity', Icon: Sparkles, color: 'text-rose-400' },
   ];
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-1">Paint Quality</h2>
+      <h2 className="text-2xl font-bold text-white mb-1">What paint quality level do you prefer?</h2>
       <p className="text-white/50 text-sm mb-6">Which grade of paint should we use for this project?</p>
       <div className="grid grid-cols-1 gap-4">
         {options.map(({ value: v, label, desc, Icon, color }) => (
@@ -26,9 +26,9 @@ export function StepPaintQuality({ value, onChange }: Props) {
             style={
               value === v
                 ? {
-                    background: 'rgba(245, 158, 11, 0.18)',
-                    border: '1.5px solid rgba(245, 158, 11, 0.55)',
-                    boxShadow: '0 0 24px rgba(245, 158, 11, 0.15)',
+                    background: 'rgba(204, 0, 0, 0.16)',
+                    border: '1.5px solid rgba(204, 0, 0, 0.55)',
+                    boxShadow: '0 0 24px rgba(204, 0, 0, 0.15)',
                   }
                 : {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -50,19 +50,24 @@ export function StepPaintQuality({ value, onChange }: Props) {
               className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 flex-shrink-0"
               style={
                 value === v
-                  ? { background: 'var(--brand-primary)', boxShadow: '0 4px 16px rgba(245,158,11,0.35)' }
+                  ? { background: 'var(--brand-primary)', boxShadow: '0 4px 16px rgba(204,0,0,0.35)' }
                   : { background: 'rgba(255,255,255,0.08)' }
               }
             >
               <Icon className={`w-6 h-6 ${value === v ? 'text-white' : `${color} group-hover:text-white/80`}`} />
             </div>
             <div className="pr-8">
-              <p className={`font-semibold text-base ${value === v ? 'text-amber-300' : 'text-white/80'}`}>{label}</p>
+              <p className="font-semibold text-base" style={{ color: value === v ? '#FF8888' : 'rgba(255,255,255,0.80)' }}>
+                {label}
+              </p>
               <p className="text-xs text-white/40 mt-0.5">{desc}</p>
             </div>
           </button>
         ))}
       </div>
+      <p className="text-xs text-white/35 mt-4 text-center">
+        We use top brands including Sherwin-Williams and Benjamin Moore
+      </p>
     </div>
   );
 }

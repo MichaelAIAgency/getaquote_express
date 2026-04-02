@@ -1,8 +1,8 @@
-export type PropertyType = 'residential' | 'commercial';
-export type ProjectType = 'interior' | 'exterior';
-export type SurfaceCondition = 'good' | 'medium' | 'bad';
+export type PropertyType = 'single_family' | 'condo' | 'townhouse' | 'commercial';
+export type ProjectType = 'interior' | 'exterior' | 'both' | 'deck_fence' | 'cabinets' | 'stained_doors';
+export type SurfaceCondition = 'excellent' | 'good' | 'fair' | 'poor';
 export type PaintQuality = 'standard' | 'premium' | 'ultra_premium';
-export type Urgency = 'flexible' | 'two_weeks' | 'asap';
+export type Urgency = 'flexible' | 'one_month' | 'two_weeks' | 'asap';
 export type NumCoats = 1 | 2 | 3;
 
 export interface FormData {
@@ -19,6 +19,8 @@ export interface FormData {
     ceiling: boolean;
     trim: boolean;
     doors: boolean;
+    pressure_washing: boolean;
+    color_consultation: boolean;
   };
 }
 
@@ -32,15 +34,16 @@ export interface LeadData {
   name: string;
   email: string;
   phone: string;
+  address: string;
 }
 
 export interface AiAnalysis {
-  projectType: ProjectType;
+  projectType: 'interior' | 'exterior';
   surfaceCondition: SurfaceCondition;
   hasCeiling: boolean;
   needsRepairs: boolean;
   needsPrimer: boolean;
-  estimatedAreaM2: number | null;
+  estimatedAreaSqft: number | null;
   conditionReport: string;
   confidence: 'low' | 'medium' | 'high';
 }

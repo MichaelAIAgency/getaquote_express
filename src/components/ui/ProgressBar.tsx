@@ -25,11 +25,11 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
                 }`}
                 style={
                   isDone
-                    ? { background: 'var(--brand-primary)', boxShadow: '0 0 12px rgba(245,158,11,0.40)' }
+                    ? { background: 'var(--brand-primary)', boxShadow: '0 0 12px rgba(204,0,0,0.40)' }
                     : isActive
                     ? {
                         background: 'var(--brand-primary)',
-                        boxShadow: '0 0 0 4px rgba(245,158,11,0.20), 0 0 16px rgba(245,158,11,0.35)',
+                        boxShadow: '0 0 0 4px rgba(204,0,0,0.20), 0 0 16px rgba(204,0,0,0.35)',
                       }
                     : { background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }
                 }
@@ -56,7 +56,7 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
           style={{
             width: `${percent}%`,
             background: 'linear-gradient(90deg, var(--brand-gradient-from), var(--brand-gradient-to))',
-            boxShadow: '0 0 8px rgba(245,158,11,0.50)',
+            boxShadow: '0 0 8px rgba(204,0,0,0.50)',
           }}
         />
       </div>

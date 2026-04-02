@@ -1,12 +1,7 @@
-import { Droplets, Wrench, LayoutTemplate, DoorClosed, PenTool } from 'lucide-react';
+import { Droplets, Wrench, LayoutTemplate, DoorClosed, PenTool, Waves, Palette } from 'lucide-react';
+import type { FormData } from '../../types/estimator';
 
-interface Extras {
-  primer: boolean;
-  repairs: boolean;
-  ceiling: boolean;
-  trim: boolean;
-  doors: boolean;
-}
+type Extras = FormData['extras'];
 
 interface Props {
   value: Extras;
@@ -14,11 +9,13 @@ interface Props {
 }
 
 const options: { key: keyof Extras; label: string; desc: string; surcharge: string; Icon: React.ElementType }[] = [
-  { key: 'primer', label: 'Primer needed', desc: 'Improves adhesion and color accuracy.', surcharge: '+10%', Icon: Droplets },
-  { key: 'repairs', label: 'Wall repairs', desc: 'Filling cracks, holes, and surface defects.', surcharge: '+20%', Icon: Wrench },
-  { key: 'ceiling', label: 'Ceiling included', desc: 'Include ceiling surface in the quote.', surcharge: '+15%', Icon: LayoutTemplate },
-  { key: 'trim', label: 'Baseboards & Trim', desc: 'Detailed painting around edges and floors.', surcharge: '+10%', Icon: PenTool },
-  { key: 'doors', label: 'Doors & Window Frames', desc: 'Painting frames and individual doors.', surcharge: '+15%', Icon: DoorClosed },
+  { key: 'primer', label: 'Primer Coat', desc: 'Improves adhesion and color accuracy.', surcharge: '+10%', Icon: Droplets },
+  { key: 'repairs', label: 'Drywall Repairs', desc: 'Filling cracks, holes, and surface defects.', surcharge: '+20%', Icon: Wrench },
+  { key: 'ceiling', label: 'Ceiling Painting', desc: 'Include ceiling surface in the quote.', surcharge: '+15%', Icon: LayoutTemplate },
+  { key: 'trim', label: 'Trim & Baseboards', desc: 'Detailed painting around edges and floors.', surcharge: '+10%', Icon: PenTool },
+  { key: 'doors', label: 'Door Painting', desc: 'Painting frames and individual doors.', surcharge: '+15%', Icon: DoorClosed },
+  { key: 'pressure_washing', label: 'Pressure Washing', desc: 'Exterior surface cleaning before painting.', surcharge: '+12%', Icon: Waves },
+  { key: 'color_consultation', label: 'Color Consultation', desc: 'Expert color selection guidance.', surcharge: '+5%', Icon: Palette },
 ];
 
 export function StepExtras({ value, onChange }: Props) {
@@ -28,8 +25,8 @@ export function StepExtras({ value, onChange }: Props) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-1">Any extras?</h2>
-      <p className="text-white/50 text-sm mb-6">Select any additional services you require. You can skip this step.</p>
+      <h2 className="text-2xl font-bold text-white mb-1">Any additional services needed?</h2>
+      <p className="text-white/50 text-sm mb-6">Select any extras you require. You can skip this step.</p>
       <div className="flex flex-col gap-3">
         {options.map(({ key, label, desc, surcharge, Icon }) => {
           const checked = value[key];
@@ -41,9 +38,9 @@ export function StepExtras({ value, onChange }: Props) {
               style={
                 checked
                   ? {
-                      background: 'rgba(245, 158, 11, 0.15)',
-                      border: '1.5px solid rgba(245, 158, 11, 0.50)',
-                      boxShadow: '0 0 20px rgba(245, 158, 11, 0.12)',
+                      background: 'rgba(204, 0, 0, 0.15)',
+                      border: '1.5px solid rgba(204, 0, 0, 0.50)',
+                      boxShadow: '0 0 20px rgba(204, 0, 0, 0.12)',
                     }
                   : {
                       background: 'rgba(255, 255, 255, 0.05)',
@@ -55,7 +52,7 @@ export function StepExtras({ value, onChange }: Props) {
                 className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200"
                 style={
                   checked
-                    ? { background: 'var(--brand-primary)', boxShadow: '0 4px 12px rgba(245,158,11,0.30)' }
+                    ? { background: 'var(--brand-primary)', boxShadow: '0 4px 12px rgba(204,0,0,0.30)' }
                     : { background: 'rgba(255,255,255,0.08)' }
                 }
               >
@@ -66,7 +63,7 @@ export function StepExtras({ value, onChange }: Props) {
                 <p className={`text-sm mt-0.5 ${checked ? 'text-white/60' : 'text-white/40'}`}>{desc}</p>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
-                <span className={`text-sm font-semibold ${checked ? 'text-amber-300' : 'text-white/30'}`}>
+                <span className="text-sm font-semibold" style={{ color: checked ? '#FF8888' : 'rgba(255,255,255,0.30)' }}>
                   {surcharge}
                 </span>
                 <div

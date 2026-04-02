@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 
 import type { AiAnalysis } from '../../types/estimator';
+import { brand } from '../../config/brand';
 
 interface Props {
   onAnalysisComplete: (photoUrl: string, analysis: AiAnalysis) => void;
@@ -24,23 +25,25 @@ const DETECTED_ITEMS = (a: AiAnalysis) => [
     Icon: AlertCircle,
     label: 'Surface condition',
     value:
-      a.surfaceCondition === 'good'
-        ? 'Good — minimal prep'
-        : a.surfaceCondition === 'medium'
-        ? 'Average — minor repairs'
+      a.surfaceCondition === 'excellent'
+        ? 'Excellent — minimal prep'
+        : a.surfaceCondition === 'good'
+        ? 'Good — standard prep'
+        : a.surfaceCondition === 'fair'
+        ? 'Fair — some repairs needed'
         : 'Poor — major prep needed',
   },
   ...(a.needsRepairs ? [{ Icon: Wrench, label: 'Wall repairs', value: 'Repairs likely needed' }] : []),
   ...(a.needsPrimer ? [{ Icon: Droplets, label: 'Primer', value: 'Primer recommended' }] : []),
   ...(a.hasCeiling ? [{ Icon: LayoutTemplate, label: 'Ceiling', value: 'Ceiling in scope' }] : []),
-  ...(a.estimatedAreaM2
-    ? [{ Icon: ImagePlus, label: 'Estimated area', value: `~${a.estimatedAreaM2} m²` }]
+  ...(a.estimatedAreaSqft
+    ? [{ Icon: ImagePlus, label: 'Estimated area', value: `~${a.estimatedAreaSqft} sq ft` }]
     : []),
 ];
 
 const CONFIDENCE_STYLES: Record<AiAnalysis['confidence'], React.CSSProperties> = {
   high: { background: 'rgba(16,185,129,0.18)', color: '#6EE7B7', border: '1px solid rgba(16,185,129,0.40)' },
-  medium: { background: 'rgba(245,158,11,0.18)', color: '#FCD34D', border: '1px solid rgba(245,158,11,0.40)' },
+  medium: { background: 'rgba(204,0,0,0.18)', color: '#FF8888', border: '1px solid rgba(204,0,0,0.40)' },
   low: { background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.60)', border: '1px solid rgba(255,255,255,0.18)' },
 };
 
@@ -75,16 +78,16 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
         <div
           className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full mb-3"
           style={{
-            background: 'rgba(245, 158, 11, 0.15)',
-            border: '1px solid rgba(245, 158, 11, 0.35)',
-            color: '#FCD34D',
+            background: 'rgba(204, 0, 0, 0.15)',
+            border: '1px solid rgba(204, 0, 0, 0.35)',
+            color: '#FF8888',
           }}
         >
           <Sparkles className="w-3.5 h-3.5" />
           AI-Powered
         </div>
-        <h2 className="text-2xl font-bold text-white mb-1">Analyze your space</h2>
-        <p className="text-white/50 text-sm">Upload a photo and AI will pre-fill the form for you.</p>
+        <h2 className="text-2xl font-bold text-white mb-1">{brand.copy.photoUploadTitle}</h2>
+        <p className="text-white/50 text-sm">{brand.copy.photoUploadSubtext}</p>
       </div>
 
       {state === 'idle' && (
@@ -99,9 +102,9 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
             <div className="flex flex-col items-center gap-3">
               <div
                 className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                style={{ background: 'rgba(245, 158, 11, 0.15)' }}
+                style={{ background: 'rgba(204, 0, 0, 0.15)' }}
               >
-                <Camera className="w-7 h-7 text-amber-400" />
+                <Camera className="w-7 h-7" style={{ color: '#CC0000' }} />
               </div>
               <div>
                 <p className="font-semibold text-white/85">Drop a photo here</p>
@@ -120,15 +123,15 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
               </div>
             </div>
           </div>
-          
+
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div 
+            <div
               className="px-4 py-2 rounded-xl backdrop-blur-md font-bold text-sm tracking-wide shadow-2xl flex items-center gap-2"
               style={{
-                background: 'rgba(245, 158, 11, 0.9)',
+                background: 'rgba(204, 0, 0, 0.90)',
                 color: '#fff',
                 border: '1px solid rgba(255,255,255,0.2)',
-                transform: 'rotate(-2deg)'
+                transform: 'rotate(-2deg)',
               }}
             >
               <Wrench className="w-4 h-4" />
@@ -147,9 +150,9 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
           >
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(245, 158, 11, 0.20)', border: '1px solid rgba(245, 158, 11, 0.40)' }}
+              style={{ background: 'rgba(204, 0, 0, 0.20)', border: '1px solid rgba(204, 0, 0, 0.40)' }}
             >
-              <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+              <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#CC0000' }} />
             </div>
             <p className="font-semibold text-sm text-white">
               {state === 'uploading' ? 'Uploading photo…' : 'AI is analysing your space…'}
@@ -229,7 +232,7 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
             className="relative w-full py-3.5 text-white font-semibold rounded-2xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 overflow-hidden"
             style={{
               background: 'var(--brand-primary)',
-              boxShadow: '0 4px 20px rgba(245, 158, 11, 0.35)',
+              boxShadow: '0 4px 20px rgba(204, 0, 0, 0.35)',
             }}
           >
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -243,7 +246,7 @@ export function StepPhotoUpload({ onAnalysisComplete, onSkip }: Props) {
           className="relative w-full py-3.5 text-white font-semibold rounded-2xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 overflow-hidden mt-2"
           style={{
             background: 'var(--brand-primary)',
-            boxShadow: '0 4px 20px rgba(245, 158, 11, 0.35)',
+            boxShadow: '0 4px 20px rgba(204, 0, 0, 0.35)',
           }}
         >
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />

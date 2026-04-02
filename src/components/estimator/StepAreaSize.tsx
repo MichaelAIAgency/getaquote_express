@@ -6,25 +6,76 @@ interface Props {
   error: string;
 }
 
+const presets: { label: string; value: string }[] = [
+  { label: 'Under 500 sq ft', value: '400' },
+  { label: '500–1,000 sq ft', value: '750' },
+  { label: '1,000–2,000 sq ft', value: '1500' },
+  { label: '2,000–3,500 sq ft', value: '2750' },
+  { label: '3,500+ sq ft', value: '4000' },
+];
+
 export function StepAreaSize({ value, onChange, error }: Props) {
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-1">What is the total area?</h2>
-      <p className="text-white/50 text-sm mb-6">Enter the total surface area to be painted in square meters.</p>
+      <h2 className="text-2xl font-bold text-white mb-1">What's the approximate size of the area?</h2>
+      <p className="text-white/50 text-sm mb-6">Select the range that best matches your project size.</p>
+
+      <div className="flex flex-col gap-3 mb-5">
+        {presets.map(({ label, value: v }) => (
+          <button
+            key={v}
+            onClick={() => onChange(v)}
+            className="flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 text-left hover:scale-[1.01]"
+            style={
+              value === v
+                ? {
+                    background: 'rgba(204, 0, 0, 0.15)',
+                    border: '1.5px solid rgba(204, 0, 0, 0.50)',
+                    boxShadow: '0 0 20px rgba(204, 0, 0, 0.12)',
+                  }
+                : {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1.5px solid rgba(255, 255, 255, 0.09)',
+                  }
+            }
+          >
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={
+                value === v
+                  ? { background: 'var(--brand-primary)', boxShadow: '0 4px 12px rgba(204,0,0,0.30)' }
+                  : { background: 'rgba(255,255,255,0.08)' }
+              }
+            >
+              <Ruler className={`w-4 h-4 ${value === v ? 'text-white' : 'text-white/50'}`} />
+            </div>
+            <p className="font-semibold" style={{ color: value === v ? '#FF8888' : 'rgba(255,255,255,0.80)' }}>
+              {label}
+            </p>
+            {value === v && (
+              <span className="ml-auto flex-shrink-0">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ color: 'var(--brand-primary)' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
 
       <div className="relative">
         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-          <Ruler className="w-5 h-5" />
+          <Ruler className="w-4 h-4" />
         </div>
         <input
           type="number"
           min="1"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="e.g. 120"
-          className={`w-full pl-12 pr-16 py-4 text-lg rounded-2xl glass-input ${error ? 'glass-input-error' : ''}`}
+          placeholder="Or enter exact sq ft"
+          className={`w-full pl-11 pr-20 py-3 text-base rounded-2xl glass-input ${error ? 'glass-input-error' : ''}`}
         />
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 font-medium text-sm">m²</span>
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 font-medium text-xs">sq ft</span>
       </div>
 
       {error && (
@@ -35,31 +86,6 @@ export function StepAreaSize({ value, onChange, error }: Props) {
           {error}
         </p>
       )}
-
-      <div className="mt-5 grid grid-cols-3 gap-2">
-        {[50, 100, 150, 200, 300, 500].map((size) => (
-          <button
-            key={size}
-            onClick={() => onChange(String(size))}
-            className="py-2 px-3 rounded-xl text-sm font-medium transition-all duration-150"
-            style={
-              value === String(size)
-                ? {
-                    background: 'rgba(245, 158, 11, 0.20)',
-                    border: '1.5px solid rgba(245, 158, 11, 0.55)',
-                    color: '#FCD34D',
-                  }
-                : {
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.10)',
-                    color: 'rgba(255,255,255,0.55)',
-                  }
-            }
-          >
-            {size} m²
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
