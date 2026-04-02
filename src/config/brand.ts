@@ -14,7 +14,7 @@ export const brand = {
   stats: [
     { value: '500+', label: 'Projects Completed' },
     { value: '4.9★', label: 'Average Rating' },
-    { value: '15 Years', label: 'Serving Nashville' },
+    { value: '20 Years', label: 'Serving Nashville' },
   ],
 
   copy: {
