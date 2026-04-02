@@ -13,12 +13,11 @@ import { StepExtras } from './components/estimator/StepExtras';
 import { LoadingScreen } from './components/estimator/LoadingScreen';
 import { ResultScreen } from './components/estimator/ResultScreen';
 import { LeadCapture } from './components/estimator/LeadCapture';
-import { ThankYou } from './components/estimator/ThankYou';
 import { brand } from './config/brand';
 import { calculateEstimate } from './utils/pricing';
 import type { FormData, PriceEstimate, AiAnalysis } from './types/estimator';
 
-type AppView = 'landing' | 'photo' | 'form' | 'loading' | 'result' | 'lead' | 'thanks';
+type AppView = 'landing' | 'photo' | 'form' | 'lead' | 'loading' | 'result';
 
 const TOTAL_STEPS = 8;
 
@@ -259,14 +258,13 @@ export default function App() {
       const est = calculateEstimate(formData);
       setEstimate(est);
       advance();
-      setView('loading');
+      setView('lead');
     }
   };
 
   const handleBack = () => {
-    if (view === 'result')             { setView('form');    advance(); setStep(TOTAL_STEPS); return; }
-    if (view === 'loading')            { setView('form');    advance(); setStep(TOTAL_STEPS); return; }
-    if (view === 'lead')               { setView('result');  advance(); return; }
+    if (view === 'loading')            { setView('lead');    advance(); return; }
+    if (view === 'lead')               { setView('form');    advance(); setStep(TOTAL_STEPS); return; }
     if (view === 'form' && step > 1)   { advance(); setStep((s) => s - 1); return; }
     if (view === 'form' && step === 1) { setView('photo');   advance(); return; }
     if (view === 'photo')              { setView('landing'); return; }
@@ -290,7 +288,7 @@ export default function App() {
         <div className="flex items-center gap-2">
           <BrandLogo />
         </div>
-        {(view === 'photo' || view === 'form' || view === 'result' || view === 'loading' || view === 'lead') && (
+        {(view === 'photo' || view === 'form' || view === 'lead' || view === 'loading') && (
           <button
             onClick={handleBack}
             className="flex items-center gap-1 text-sm text-white/50 hover:text-white/90 transition-colors"
@@ -390,6 +388,15 @@ export default function App() {
                   onChange={(v) => setFormData((f) => ({ ...f, extras: v }))}
                 />
               )}
+              {view === 'lead' && (
+                <LeadCapture
+                  estimate={estimate}
+                  formData={formData}
+                  photoUrl={photoUrl}
+                  conditionReport={aiAnalysis?.conditionReport ?? null}
+                  onSuccess={() => { advance(); setView('loading'); }}
+                />
+              )}
               {view === 'loading' && (
                 <LoadingScreen onComplete={() => { advance(); setView('result'); }} />
               )}
@@ -397,20 +404,8 @@ export default function App() {
                 <ResultScreen
                   estimate={estimate}
                   formData={formData}
-                  onContinue={() => { advance(); setView('lead'); }}
-                />
-              )}
-              {view === 'lead' && (
-                <LeadCapture
-                  estimate={estimate}
-                  formData={formData}
-                  photoUrl={photoUrl}
                   conditionReport={aiAnalysis?.conditionReport ?? null}
-                  onSuccess={() => { advance(); setView('thanks'); }}
                 />
-              )}
-              {view === 'thanks' && (
-                <ThankYou conditionReport={aiAnalysis?.conditionReport ?? null} />
               )}
             </div>
 

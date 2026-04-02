@@ -1,4 +1,4 @@
-import { TrendingUp, Info, Phone } from 'lucide-react';
+import { TrendingUp, Info, Phone, CheckCircle2, User, FileText } from 'lucide-react';
 import type { PriceEstimate, FormData } from '../../types/estimator';
 import { formatCurrency } from '../../utils/pricing';
 import { brand } from '../../config/brand';
@@ -6,7 +6,7 @@ import { brand } from '../../config/brand';
 interface Props {
   estimate: PriceEstimate;
   formData: FormData;
-  onContinue: () => void;
+  conditionReport: string | null;
 }
 
 const formatString = (s: string) => s.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -27,7 +27,7 @@ const projectLabel: Record<string, string> = {
   stained_doors: 'Stained Doors',
 };
 
-export function ResultScreen({ estimate, formData, onContinue }: Props) {
+export function ResultScreen({ estimate, formData, conditionReport }: Props) {
   const items = [
     { label: 'Property type', value: formData.propertyType ? formatString(formData.propertyType) : '' },
     { label: 'Project type', value: formData.projectType ? (projectLabel[formData.projectType] ?? formatString(formData.projectType)) : '' },
@@ -50,7 +50,7 @@ export function ResultScreen({ estimate, formData, onContinue }: Props) {
 
   return (
     <div className="animate-fade-in">
-      <div className="text-center mb-8">
+      <div className="text-center mb-6">
         <div
           className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4"
           style={{
@@ -66,7 +66,7 @@ export function ResultScreen({ estimate, formData, onContinue }: Props) {
       </div>
 
       <div
-        className="relative rounded-2xl p-6 text-white text-center mb-6 overflow-hidden"
+        className="relative rounded-2xl p-6 text-white text-center mb-5 overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, var(--brand-gradient-from), var(--brand-gradient-to))',
           boxShadow: '0 12px 40px rgba(204, 0, 0, 0.35)',
@@ -87,7 +87,7 @@ export function ResultScreen({ estimate, formData, onContinue }: Props) {
       </div>
 
       <div
-        className="rounded-2xl p-4 mb-6 space-y-2.5"
+        className="rounded-2xl p-4 mb-5 space-y-2.5"
         style={{
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.09)',
@@ -107,30 +107,65 @@ export function ResultScreen({ estimate, formData, onContinue }: Props) {
         )}
       </div>
 
-      <button
-        onClick={onContinue}
-        className="relative w-full py-4 text-white font-semibold rounded-2xl transition-all duration-200 active:scale-[0.98] text-lg overflow-hidden"
+      <div
+        className="rounded-2xl p-5 mb-5"
         style={{
-          background: 'var(--brand-primary)',
-          boxShadow: '0 4px 24px rgba(204, 0, 0, 0.35)',
+          background: 'rgba(16, 185, 129, 0.08)',
+          border: '1px solid rgba(16, 185, 129, 0.25)',
         }}
       >
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-        {brand.copy.resultCta}
-      </button>
+        <div className="flex items-start gap-3">
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+            style={{ background: 'rgba(16, 185, 129, 0.15)' }}
+          >
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div>
+            <p className="font-semibold text-white text-sm mb-1">{brand.copy.rickConfirmTitle}</p>
+            <p className="text-white/55 text-xs leading-relaxed">{brand.copy.rickConfirmSubtext}</p>
+          </div>
+        </div>
+
+        <div
+          className="flex items-center gap-2 mt-4 pt-4"
+          style={{ borderTop: '1px solid rgba(16, 185, 129, 0.15)' }}
+        >
+          <User className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          <span className="text-xs font-medium text-white/70">Rick Smith — Nashville House Painters</span>
+        </div>
+      </div>
+
+      {conditionReport && (
+        <div
+          className="rounded-2xl p-4 mb-5"
+          style={{
+            background: 'rgba(204, 0, 0, 0.10)',
+            border: '1px solid rgba(204, 0, 0, 0.28)',
+          }}
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <FileText className="w-4 h-4 flex-shrink-0" style={{ color: '#CC0000' }} />
+            <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#FF8888' }}>AI Condition Report</p>
+          </div>
+          <p className="text-sm text-white/70 leading-relaxed">{conditionReport}</p>
+        </div>
+      )}
 
       <a
         href={`tel:${brand.phone}`}
-        className="flex items-center justify-center gap-2 mt-3 text-sm font-medium transition-colors"
-        style={{ color: 'rgba(204,0,0,0.80)' }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = '#CC0000')}
-        onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(204,0,0,0.80)')}
+        className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98]"
+        style={{
+          background: 'rgba(204, 0, 0, 0.12)',
+          border: '1px solid rgba(204, 0, 0, 0.30)',
+          color: '#FF8888',
+        }}
       >
-        <Phone className="w-3.5 h-3.5" />
-        {brand.copy.resultPhoneCta}
+        <Phone className="w-4 h-4" />
+        {brand.copy.rickConfirmCta}
       </a>
 
-      <p className="text-xs text-center text-white/25 mt-3">
+      <p className="text-xs text-center text-white/25 mt-4">
         {brand.copy.privacyNote}
       </p>
     </div>

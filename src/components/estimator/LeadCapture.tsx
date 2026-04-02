@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { User, Mail, Phone, MapPin, Shield, Loader2 } from 'lucide-react';
 import type { LeadData, PriceEstimate, FormData } from '../../types/estimator';
 import { supabase } from '../../lib/supabase';
-import { formatCurrency } from '../../utils/pricing';
 import { brand } from '../../config/brand';
+
+const WEBHOOK_URL = 'https://hook.eu1.make.com/0vbr6a1ohlpyept4pdfkyvnx52j89lxu';
 
 interface Props {
   estimate: PriceEstimate;
@@ -69,13 +70,36 @@ export function LeadCapture({ estimate, formData, photoUrl, conditionReport, onS
       ai_condition_report: conditionReport,
     });
 
-    setLoading(false);
-
     if (error) {
+      setLoading(false);
       setSubmitError('Something went wrong. Please try again.');
       return;
     }
 
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: lead.name.trim(),
+        email: lead.email.trim(),
+        phone: lead.phone.trim(),
+        address: lead.address.trim() || null,
+        property_type: formData.propertyType,
+        project_type: formData.projectType,
+        area_size: formData.areaSize,
+        surface_condition: formData.surfaceCondition,
+        paint_quality: formData.paintQuality,
+        urgency: formData.urgency,
+        num_coats: formData.numCoats,
+        extras: formData.extras,
+        estimate_low: estimate.low,
+        estimate_high: estimate.high,
+        photo_url: photoUrl,
+        ai_condition_report: conditionReport,
+      }),
+    }).catch(() => {});
+
+    setLoading(false);
     onSuccess();
   };
 
@@ -90,12 +114,7 @@ export function LeadCapture({ estimate, formData, photoUrl, conditionReport, onS
     <div className="animate-fade-in">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-white mb-1">{brand.copy.leadTitle}</h2>
-        <p className="text-white/50 text-sm">
-          Your estimate:{' '}
-          <span className="font-semibold" style={{ color: '#FF8888' }}>
-            {formatCurrency(estimate.low)} – {formatCurrency(estimate.high)}
-          </span>
-        </p>
+        <p className="text-white/50 text-sm">{brand.copy.leadSubtext}</p>
       </div>
 
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
